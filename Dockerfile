@@ -38,11 +38,11 @@ RUN set -x; \
 	    python-werkzeug \
 	    python-xlwt \
 	    python-yaml \
-	    postgresql \
 	    python-gevent \
 	    python-serial \
 	    python-pip \
 	    python-dev \
+	    net-tools \
 	    vim \
 	    mc \
 	    mg \
@@ -52,7 +52,22 @@ RUN set -x; \
 	    isc-dhcp-server \
 	    git \
 	    rsync \
-	    console-data            
+	    console-data \
+	    gcc \
+	    cron \
+	&& pip install pyusb==1.0b1 \
+	    qrcode \
+	    evdev            
+
+RUN set -x; \
+	useradd --create-home --shell /bin/bash odoo \
+	&& groupadd usbusers \
+	&& usermod -a -G usbusers odoo \
+	&& usermod -a -G lp odoo
+
+VOLUME /var/log/odoo
+
+RUN echo '* * * * * rm /var/run/odoo/sessions/*' | crontab -
 
 #ca-certificates \
 #            curl \
