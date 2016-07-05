@@ -1,0 +1,10 @@
+docker run -it --device=/dev/bus/usb/001/006 --security-opt seccomp:unconfined c9f259ee2d63 /bin/bash
+
+udevadm control --reload
+udevadm trigger
+
+udevadm test $(udevadm info -q path -n /dev/bus/usb/001/006) 2>&1
+
+udevadm info -q path -n /dev/bus/usb/001/006
+
+sudo -u odoo ./odoo.py --load=web,hw_proxy,hw_posbox_homepage,hw_posbox_upgrade,hw_scale,hw_scanner,hw_escpos

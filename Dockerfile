@@ -55,6 +55,7 @@ RUN set -x; \
 	    console-data \
 	    gcc \
 	    cron \
+	    usbutils
 	&& pip install pyusb==1.0b1 \
 	    qrcode \
 	    evdev            
@@ -69,6 +70,22 @@ VOLUME /var/log/odoo
 
 RUN echo '* * * * * rm /var/run/odoo/sessions/*' | crontab -
 
+WORKDIR "/home/odoo"
+RUN set -x; \
+	git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git 
+RUN chown -R odoo:odoo /home/odoo/odoo	
+WORKDIR "/home/odoo/odoo"
+
+USER odoo
+RUN set -x; \
+	git config core.sparsecheckout true \
+	&& echo -e "addons/web\naddons/web_kanban\naddons/hw_*\naddons/point_of_sale/tools/posbox/configuration\nopenerp/\nodoo.py" > sparse-checkout > /dev/null \
+	&& git read-tree -mu HEAD
+USER root
+COPY 99-usb.rules /etc/udev/rules.d/99-usb.rules
+
+#RUN set -x; \
+#        udevadm control --reload-rules
 #ca-certificates \
 #            curl \
 #            node-less \
