@@ -55,7 +55,7 @@ RUN set -x; \
 	    console-data \
 	    gcc \
 	    cron \
-	    usbutils
+	    usbutils \
 	&& pip install pyusb==1.0b1 \
 	    qrcode \
 	    evdev            
@@ -81,8 +81,15 @@ RUN set -x; \
 	git config core.sparsecheckout true \
 	&& echo -e "addons/web\naddons/web_kanban\naddons/hw_*\naddons/point_of_sale/tools/posbox/configuration\nopenerp/\nodoo.py" > sparse-checkout > /dev/null \
 	&& git read-tree -mu HEAD
+
+COPY config.py /home/odoo/odoo/openerp/tools/config.py
+COPY posbox_update.sh /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh
+COPY main.py /home/odoo/odoo/addons/hw_posbox_upgrade/controllers/main.py
+
 USER root
 COPY 99-usb.rules /etc/udev/rules.d/99-usb.rules
+
+EXPOSE 8869
 
 #RUN set -x; \
 #        udevadm control --reload-rules

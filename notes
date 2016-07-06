@@ -1,4 +1,7 @@
-docker run -it --device=/dev/bus/usb/001/006 --security-opt seccomp:unconfined c9f259ee2d63 /bin/bash
+docker run -e POSTGRES_USER=odoo -d -e POSTGRES_PASSWORD=odoo --name db_odoo postgres:9.4
+sudo -u postgres createuser -s odoo
+docker run -it -P --device=/dev/bus/usb/001/009:/dev/bus/usb/001/009 --link db_odoo:db_odoo --security-opt seccomp:unconfined 323761dc8efc /bin/bash
+
 
 udevadm control --reload
 udevadm trigger
