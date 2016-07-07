@@ -66,7 +66,6 @@ RUN set -x; \
 	&& usermod -a -G usbusers odoo \
 	&& usermod -a -G lp odoo
 
-VOLUME /var/log/odoo
 
 RUN echo '* * * * * rm /var/run/odoo/sessions/*' | crontab -
 
@@ -82,11 +81,32 @@ RUN set -x; \
 	&& echo -e "addons/web\naddons/web_kanban\naddons/hw_*\naddons/point_of_sale/tools/posbox/configuration\nopenerp/\nodoo.py" > sparse-checkout > /dev/null \
 	&& git read-tree -mu HEAD
 
+USER root
 COPY config.py /home/odoo/odoo/openerp/tools/config.py
+RUN set -x; \
+	chown odoo:odoo /home/odoo/odoo/openerp/tools/config.py
+
 COPY posbox_update.sh /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh
+RUN set -x; \
+	chown odoo:odoo /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh \
+	&& chmod 755 /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh
+
 COPY main.py /home/odoo/odoo/addons/hw_posbox_upgrade/controllers/main.py
+RUN set -x; \
+	chown odoo:odoo /home/odoo/odoo/addons/hw_posbox_upgrade/controllers/main.py
+
+COPY odoo.conf /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
+RUN set -x; \
+        chown odoo:odoo /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf \
+	&& chmod 644 /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
+
+VOLUME /var/log/odoo
 
 USER root
+RUN set -x; \
+	touch /var/log/odoo/odoo-posbox.log \
+	&& chown odoo:odoo /var/log/odoo/odoo-posbox.log
+
 COPY 99-usb.rules /etc/udev/rules.d/99-usb.rules
 
 EXPOSE 8869
