@@ -1,5 +1,5 @@
 docker run -e POSTGRES_USER=odoo -d -e POSTGRES_PASSWORD=odoo --name db_odoo postgres:9.4
-sudo -u postgres createuser -s odoo
+
 docker run -it -P --device=/dev/bus/usb/001/009:/dev/bus/usb/001/009 --link db_odoo:db_odoo --security-opt seccomp:unconfined 323761dc8efc /bin/bash
 
 
@@ -10,4 +10,5 @@ udevadm test $(udevadm info -q path -n /dev/bus/usb/001/006) 2>&1
 
 udevadm info -q path -n /dev/bus/usb/001/006
 
-sudo -u odoo ./odoo.py --load=web,hw_proxy,hw_posbox_homepage,hw_posbox_upgrade,hw_scale,hw_scanner,hw_escpos
+sudo -u odoo ./odoo.py -c /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=web,hw_proxy,hw_posbox_homepage,hw_posbox_upgrade,hw_scale,hw_scanner,hw_escpos,hw_blackbox_be
+

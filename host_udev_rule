@@ -1,0 +1,2 @@
+#SUBSYSTEM=="usb", ATTRS{idVendor}=="04b8", ATTRS{idProduct}=="0202", SYMLINK+="my_tmt70" 
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04b8", ATTRS{idProduct}=="0202", NAME="cenas/my_tmt70" 

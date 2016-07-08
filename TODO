@@ -1,0 +1,10 @@
+I am stcuk due to bug #22271 of docker. More info at https://github.com/docker/docker/issues/22271
+The bug will be fixed in docker v1.12.0
+After the bug fix this is the task list to do:
+* Create static udev rule on host
+* Start container with the static rule like this "docker run -it -P --device=/dev/my_tmt70:/dev/my_tmt70 --link db_odoo:db --security-opt seccomp:unconfined 9e1a114350ca /bin/bash"
+* Create a entrypoint script that enables the printer (udevadm test $(udevadm info -q path -n /dev/bus/usb/001/009) 2>&1) and then starts the odoo service like bellow:
+sudo -u odoo ./odoo.py -c /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=web,hw_proxy,hw_posbox_homepage,hw_posbox_upgrade,hw_scale,hw_scanner,hw_escpos,hw_blackbox_be
+* Create a docker with apache recieving request over https in por 8069 and forwarding them over http to port 8869 to the odoo container
+* Create a docker-compose file to startup the odoo, postgres and apache container
+* Replace --link with Network Feature

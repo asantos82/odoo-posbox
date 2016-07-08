@@ -100,6 +100,11 @@ RUN set -x; \
         chown odoo:odoo /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf \
 	&& chmod 644 /home/odoo/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
 
+COPY hw_escpos_controllers_main.py /home/odoo/odoo/addons/hw_escpos/controllers/main.py
+RUN set -x; \
+        chown odoo:odoo /home/odoo/odoo/addons/hw_escpos/controllers/main.py \
+        && chmod 644 /home/odoo/odoo/addons/hw_escpos/controllers/main.py 
+
 VOLUME /var/log/odoo
 
 USER root
